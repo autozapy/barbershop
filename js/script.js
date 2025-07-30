@@ -227,8 +227,8 @@ function adicionarAgendamento(stepContent) {
             </div>
           `);
 
-          currentStep++;
-          updateProgressSteps();
+      currentStep++;
+      updateProgressSteps();
 
       $('#voltar-inicio-btn').on('click', function () {
         backToHome();
@@ -333,7 +333,7 @@ function initializeProgressSteps() {
 
 
 function updateProgressSteps() {
-  
+
   // Desktop progress
   $('.progress-step[data-step]').each(function () {
     const $step = $(this);
@@ -722,11 +722,16 @@ function renderDateSelection($container) {
 }
 
 function renderCalendar() {
+  
   const $daysContainer = $('#calendar-days');
   $daysContainer.empty();
 
   // Converte os dias retornados pela API em Date
-  const diasDisponiveis = dias.map(d => new Date(d.data));
+  const diasDisponiveis = dias.map(d => {
+    const [ano, mes, dia] = d.data.split('T')[0].split('-').map(Number);
+    return new Date(ano, mes - 1, dia);
+  });
+
   if (diasDisponiveis.length === 0) return;
 
   // Gera todos os dias consecutivos entre o primeiro e o último
