@@ -1,0 +1,209 @@
+/* Custom Barber Shop Styles */
+:root {
+  --barber-gold: #ffc107;
+  --barber-dark: #141414;
+  --barber-gray: #333333;
+  --barber-light-gray: #f5f5f5;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.barber-bg-gradient {
+  background: linear-gradient(135deg, var(--barber-dark) 0%, var(--barber-gray) 100%);
+}
+
+.barber-gold {
+  color: var(--barber-gold) !important;
+}
+
+.barber-bg-gold {
+  background-color: var(--barber-gold) !important;
+}
+
+.barber-border-gold {
+  border-color: var(--barber-gold) !important;
+}
+
+.barber-hover-gold:hover {
+  background-color: var(--barber-gold) !important;
+  color: white !important;
+}
+
+.step-fade-in {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.progress-step {
+  transition: all 0.3s ease;
+}
+
+.progress-step.active {
+  background-color: var(--barber-gold) !important;
+  color: white !important;
+}
+
+.progress-step.completed {
+  background-color: var(--barber-gold) !important;
+  color: white !important;
+}
+
+.btn-barber-primary {
+  background-color: var(--barber-gold);
+  border-color: var(--barber-gold);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-barber-primary:hover,
+.btn-barber-primary:active,
+.btn-barber-primary.active,
+.btn-barber-primary:focus {
+ background-color: #e6ac00 !important;
+  border-color: #e6ac00 !important;
+  color: white !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3) !important;
+}
+
+.btn-barber-outline {
+  border: 2px solid var(--barber-gold);
+  color: var(--barber-gold);
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+.btn-barber-outline:hover {
+  background-color: var(--barber-gold);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.service-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.service-card.selected {
+  border-color: var(--barber-gold) !important;
+  background-color: rgba(255, 193, 7, 0.05);
+}
+
+.barber-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.barber-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.barber-card.selected {
+  border-color: var(--barber-gold) !important;
+  box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.2);
+}
+
+.time-slot {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.time-slot:hover:not(.disabled) {
+  background-color: var(--barber-gold) !important;
+  color: white !important;
+  transform: scale(1.05);
+}
+
+.time-slot.selected {
+  background-color: var(--barber-gold) !important;
+  color: white !important;
+}
+
+.time-slot.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.calendar-day {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.calendar-day:hover:not(.disabled) {
+  background-color: var(--barber-gold) !important;
+  color: white !important;
+  border-color: var(--barber-gold) !important;
+}
+
+.calendar-day.selected {
+  background-color: var(--barber-gold) !important;
+  color: white !important;
+}
+
+.calendar-day.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.hero-section {
+  min-height: 100vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+              url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23141414" width="1200" height="600"/><g fill="%23333"><circle cx="200" cy="100" r="50" opacity="0.1"/><circle cx="800" cy="200" r="80" opacity="0.1"/><circle cx="400" cy="400" r="60" opacity="0.1"/><circle cx="1000" cy="500" r="70" opacity="0.1"/></g></svg>') center/cover;
+}
+
+.min-vh-100 {
+  min-height: 100vh;
+}
+
+.invalid-feedback {
+  display: none; /* Oculta por padrão */
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+
+input.is-invalid + .invalid-feedback {
+  display: block; /* Mostra apenas se o input tiver a classe 'is-invalid' */
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+.dias-calendario {
+    color: #6c757d;
+    border-color: #6c757d !important;
+}
+
+.border-warning {
+    --bs-border-opacity: 1;
+    border-color: rgba(var(--bs-warning-rgb), var(--bs-border-opacity)) !important;
+}
+
+.calendar-day.indisponivel {
+  background-color: #f0f0f0 !important;
+  color: #999 !important;
+  border-color: #ddd !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+}

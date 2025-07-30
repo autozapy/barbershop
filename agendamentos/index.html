@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elite Barber Shop - Visualizar Agendamentos</title>
+    <meta name="description" content="Visualize e gerencie os agendamentos da Elite Barber Shop" />
+    <meta name="author" content="Elite Barber Shop" />
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/styles.css">
+  </head>
+
+  <body>
+    <!-- Header -->
+    <div class="barber-bg-gradient text-white py-3 py-md-4">
+      <div class="container-fluid px-3">
+        <div class="row align-items-center">
+          <div class="col-auto">
+            <a href="../index.html" class="btn btn-link text-white p-0 me-2 me-md-3">
+              <i class="bi bi-house" style="font-size: 1.25rem;"></i>
+            </a>
+          </div>
+          <div class="col">
+            <h2 class="fw-bold mb-0 fs-5 fs-md-4">
+              <i class="bi bi-calendar3 me-2"></i>
+              Agendamentos
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Professional Selection Section -->
+    <div id="professional-selection" class="min-vh-100 bg-light">
+      <div class="container-fluid px-3 py-4">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            <div class="card shadow-sm">
+              <div class="card-body p-3 p-md-5">
+                <div class="text-center mb-4">
+                  <i class="bi bi-person-badge barber-gold mb-3" style="font-size: 2.5rem;"></i>
+                  <h3 class="fw-bold fs-4 fs-md-3">Selecione o Profissional</h3>
+                  <p class="text-muted small">Escolha qual profissional deseja visualizar os agendamentos</p>
+                </div>
+
+                <div class="row g-2 g-md-3" id="professionals-grid">
+                  <!-- Professionals will be loaded by JavaScript -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Appointments View Section -->
+    <div id="appointments-view" class="min-vh-100 bg-light d-none">
+      <div class="container-fluid px-3 py-3 py-md-4">
+        <!-- Professional Info Header -->
+        <div class="card shadow-sm mb-3 mb-md-4">
+          <div class="card-body p-3 p-md-4">
+            <div class="row align-items-center">
+              <div class="col-12 col-md-6 mb-3 mb-md-0">
+                <div class="d-flex align-items-center justify-content-center justify-content-md-start">
+                  <div class="fs-1 me-3" id="professional-avatar">👨‍🦲</div>
+                  <div class="text-center text-md-start">
+                    <h4 class="fw-bold mb-1 fs-5 fs-md-4" id="professional-name">Carlos Silva</h4>
+                    <p class="text-muted mb-0 small" id="professional-experience">8 anos de experiência</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="text-center text-md-end">
+                  <button class="btn btn-barber-outline btn-sm" onclick="backToProfessionalSelection()">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    Trocar Profissional
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Date Navigation -->
+        <div class="card shadow-sm mb-3 mb-md-4">
+          <div class="card-body p-3">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <button class="btn btn-barber-outline btn-sm" id="prev-day-btn">
+                  <i class="bi bi-chevron-left"></i>
+                </button>
+              </div>
+              <div class="col text-center">
+                <h5 class="fw-bold mb-0 fs-6 fs-md-5" id="current-date">Hoje, 29 de Julho de 2025</h5>
+                <small class="text-muted" id="current-weekday">Segunda-feira</small>
+              </div>
+              <div class="col-auto">
+                <button class="btn btn-barber-outline btn-sm" id="next-day-btn">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appointments List -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-header bg-white p-3">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <h5 class="fw-bold mb-0 fs-6 fs-md-5">
+                      <i class="bi bi-clock me-2"></i>
+                      Agendamentos do Dia
+                    </h5>
+                  </div>
+                  <div class="col-auto">
+                    <span class="badge bg-primary" id="appointments-count">5 agendamentos</span>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body p-0">
+                <div id="appointments-list">
+                  <!-- Appointments will be loaded by JavaScript -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title">Confirmar Ação</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body" id="modal-body">
+            Tem certeza que deseja realizar esta ação?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-barber-primary" id="confirm-action-btn">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Custom JavaScript -->
+    <script src="../js/base.js"></script>
+    <script src="../js/agendamentos.js"></script>
+  </body>
+</html>
