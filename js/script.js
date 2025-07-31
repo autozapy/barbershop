@@ -5,6 +5,7 @@ const horarios = [];
 let currentStep = 1;
 const totalSteps = 6;
 let codigoEstabelecimento;
+const agendamentosCliente = [];
 
 // Dados da aplicação
 const bookingData = {
@@ -25,6 +26,36 @@ const steps = [
   'Horário',
   'Confirmação'
 ];
+
+
+function cancelarAgendamento(idAgendamento) {
+
+    return new Promise((resolve, reject) => {
+    $.ajax({
+      url: `${baseUrl}estabelecimentos/${codigoEstabelecimento}/agendamentos/cancelar?agendamentoId=${idAgendamento}`,
+      method: 'PUT',
+      dataType: 'json',
+      success: function () {
+
+        const phone = $('#search-phone').val();
+
+        if (phone) {
+          searchAppointments(phone);
+        }
+
+        // Mostrar sucesso
+        mostrarMensagem('success', 'Sucesso','Agendamento cancelado com sucesso!');
+
+        resolve();
+      },
+      error: function (xhr, status, error) {
+        mostrarMensagem('error', 'Erro', 'Erro ao cancelar agendamento. Tente novamente.');
+        
+        reject(error); // não avança o passo
+      }
+    });
+   });
+}
 
 function carregarServicos(stepContent) {
 
@@ -113,6 +144,59 @@ function carregarProfissionais(stepContent) {
       },
       error: function (error) {
         mostrarMensagem('error', 'Ops...', 'Não conseguimos carregar os profissionais  agora. Tente novamente em instantes.');
+
+        reject(error); // não avança o passo
+      }
+    });
+  });
+}
+
+function carregarAgendamentosCliente(celular) {
+
+  $('#appointments-list').html('');
+  
+  if (agendamentosCliente && agendamentosCliente.length > 0) {
+    agendamentosCliente.length = 0;
+  }
+
+  return new Promise((resolve, reject) => {
+
+    $.ajax({
+      url: baseUrl + 'estabelecimentos/' + codigoEstabelecimento + '/agendamentos/consultartodosativosporcelular?celular=' + celular,
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+
+        if (response.length === 0) {
+
+          mostrarMensagem('error', 'Ops!', 'Não há agendamentos abertos para este contato!');
+
+          reject(new Error('Nenhum agendamento encontrado'));
+
+          return;
+
+        }
+
+        response.forEach(agendamento => {
+          agendamentosCliente.push({
+                  id: agendamento.id,
+                  time: agendamento.hora,
+                  clientName: agendamento.nomeCliente,
+                  service: agendamento.servico,
+                  status: agendamento.status,
+                  phone: agendamento.celular,
+                  profissional : agendamento.profissional,
+                  data : agendamento.data
+          });
+        });
+
+        displayAppointments(agendamentosCliente, celular);        
+
+        resolve();
+
+      },
+      error: function (error) {
+        mostrarMensagem('error', 'Ops...', 'Não conseguimos carregar os agendamentos agora. Tente novamente em instantes.');
 
         reject(error); // não avança o passo
       }
@@ -275,6 +359,8 @@ function initializeApp() {
 
   $('#start-booking-btn').on('click', startBooking);
   $('#back-to-home-btn').on('click', backToHome);
+  $('#check-appointments-btn').on('click', showCheckAppointments);
+  $('#back-from-check-btn').on('click', backToHome);
 
   initializeProgressSteps();
 }
@@ -293,7 +379,8 @@ function backToHome() {
 
   $('#booking-section').addClass('d-none');
   $('#hero-section').removeClass('d-none');
-
+  $('#check-appointments-section').addClass('d-none');
+  
   // Reset dados
   Object.keys(bookingData).forEach(function (key) {
     if (typeof bookingData[key] === 'object' && bookingData[key] !== null) {
@@ -304,6 +391,21 @@ function backToHome() {
   });
 
   currentStep = 1;
+
+
+}
+
+function showCheckAppointments() {
+
+  $('#hero-section').addClass('d-none');
+  $('#check-appointments-section').removeClass('d-none');
+
+  // Reset da seção de consulta
+  $('#phone-search-section').removeClass('d-none');
+  $('#appointments-results-section').addClass('d-none');
+  $('#search-phone').val('');
+
+  initializePhoneSearch();
 }
 
 function initializeProgressSteps() {
@@ -722,7 +824,7 @@ function renderDateSelection($container) {
 }
 
 function renderCalendar() {
-  
+
   const $daysContainer = $('#calendar-days');
   $daysContainer.empty();
 
@@ -1108,4 +1210,232 @@ function previousStep() {
     currentStep--;
     renderStep();
   }
+}
+
+// ============= SISTEMA DE CONSULTA DE AGENDAMENTOS =============
+
+function initializePhoneSearch() {
+
+  const $phoneInput = $('#search-phone');
+  const $form = $('#phone-search-form');
+  const $newSearchBtn = $('#new-search-btn');
+
+  // Formatar telefone enquanto digita
+  $phoneInput.on('input', function () {
+    $(this).val(formatPhone($(this).val()));
+    validatePhoneSearch();
+  });
+
+  // Submit do formulário de busca
+  $form.on('submit', function (e) {
+    e.preventDefault();
+    if (validatePhoneSearch()) {
+      searchAppointments($phoneInput.val());
+    }
+  });
+
+  // Botão de nova pesquisa
+  $newSearchBtn.on('click', function () {
+    $('#phone-search-section').removeClass('d-none');
+    $('#appointments-results-section').addClass('d-none');
+    $phoneInput.val('').focus();
+  });
+}
+
+
+function validatePhoneSearch() {
+
+  const $phoneInput = $('#search-phone');
+  const phoneRegex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/;
+
+  if (!phoneRegex.test($phoneInput.val())) {
+    $phoneInput.addClass('is-invalid').removeClass('is-valid');
+    return false;
+  } else {
+    $phoneInput.removeClass('is-invalid').addClass('is-valid');
+    return true;
+  }
+}
+
+function searchAppointments(phone) {
+
+  carregarAgendamentosCliente(phone);
+}
+
+function displayAppointments(phone) {
+  const $phoneSection = $('#phone-search-section');
+  const $resultsSection = $('#appointments-results-section');
+  const $appointmentsList = $('#appointments-list');
+  $appointmentsList.html('');
+
+  $phoneSection.addClass('d-none');
+  $resultsSection.removeClass('d-none');
+
+  if (agendamentosCliente.length === 0) {
+    $appointmentsList.html(`
+      <div class="text-center py-5">
+        <i class="bi bi-calendar-x text-muted" style="font-size: 4rem;"></i>
+        <h4 class="mt-3">Nenhum agendamento encontrado</h4>
+        <p class="text-muted">Não foram encontrados agendamentos para o número ${phone}</p>
+        <button class="btn btn-barber-primary" onclick="$('#new-search-btn').click()">
+          <i class="bi bi-search me-2"></i>
+          Tentar outro número
+        </button>
+      </div>
+    `);
+    return;
+  }
+
+  $appointmentsList.html(agendamentosCliente.map(appointment => {
+    const appointmentDate = new Date(appointment.data + 'T' + appointment.time);
+    const now = new Date();
+    const canCancel = appointment.status === 'CONFIRMADO' && appointmentDate > now;
+
+    return `
+      <div class="appointment-card card mb-3 shadow-sm">
+        <div class="card-body p-4">
+          <!-- Header com status e botão -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-scissors me-2 barber-gold"></i>
+              <h5 class="fw-bold mb-0 text-dark">${appointment.service}</h5>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge status-badge ${appointment.status} fs-6">
+                ${getStatusText(appointment.status)}
+              </span>
+              ${canCancel ? `
+                <button 
+                  class="btn btn-outline-danger btn-sm"
+                  onclick="confirmCancelAppointment(${appointment.id}, '${appointment.service}', '${appointment.data}', '${appointment.time}')"
+                  title="Cancelar agendamento"
+                >
+                  <i class="bi bi-x-circle me-1"></i>
+                  <span class="d-none d-sm-inline">Cancelar</span>
+                </button>
+              ` : ''}
+            </div>
+          </div>
+          
+          <!-- Informações principais -->
+          <div class="row g-3">
+            <!-- Profissional -->
+            <div class="col-12 col-md-6">
+              <div class="d-flex align-items-center">
+                <div class="flex-shrink-0 me-3">
+                  <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="bi bi-person-fill barber-gold"></i>
+                  </div>
+                </div>
+                <div>
+                  <p class="mb-0 fw-semibold text-dark">${appointment.profissional}</p>
+                  <small class="text-muted">Profissional</small>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Data e Hora -->
+            <div class="col-12 col-md-6">
+              <div class="d-flex align-items-center">
+                <div class="flex-shrink-0 me-3">
+                  <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="bi bi-calendar-event barber-gold"></i>
+                  </div>
+                </div>
+                <div>
+                  <p class="mb-0 fw-semibold text-dark">${formatAppointmentDate(appointment.data)}</p>
+                  <small class="text-muted">
+                    <i class="bi bi-clock me-1"></i>
+                    ${appointment.time}
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Informações adicionais no mobile -->
+          <div class="d-md-none mt-3 pt-3 border-top">
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">
+                <i class="bi bi-person me-1"></i>
+                Cliente: ${appointment.clientName}
+              </small>
+              ${canCancel ? `
+                <button 
+                  class="btn btn-outline-danger btn-sm"
+                  onclick="confirmCancelAppointment(${appointment.id}, '${appointment.service}', '${appointment.date}', '${appointment.time}')"
+                >
+                  <i class="bi bi-x-circle me-1"></i>
+                  Cancelar
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join(''));
+}
+
+function formatAppointmentDate(dateString) {
+  const date = new Date(dateString + 'T00:00:00');
+  return date.toLocaleDateString('pt-BR', {
+    weekday: 'short',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+}
+
+function getStatusText(status) {
+  const statusMap = {
+    'agendado': 'Agendado',
+    'realizado': 'Realizado',
+    'cancelado': 'Cancelado'
+  };
+  return statusMap[status] || status;
+}
+
+function confirmCancelAppointment(appointmentId, serviceName, date, time) {
+
+  const formattedDate = formatAppointmentDate(date);
+
+  askConfirmation({ appointmentId, serviceName, formattedDate, time });
+
+  $('#confirm-action-btn').on('click', function () {
+    const appointmentId = $(this).data('appointment-id');
+
+    // Fecha o modal
+    const modalEl = document.getElementById('confirmationModal');
+    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    modalInstance.hide();
+
+    // Executa a ação
+    cancelarAgendamento(appointmentId);
+  });
+}
+
+function askConfirmation({ appointmentId, serviceName, formattedDate, time }) {
+
+  // Define o conteúdo do modal
+  $('#modal-title').text('Confirmar Cancelamento');
+  $('#modal-body').html(`
+    <p>Tem certeza que deseja cancelar o agendamento?</p>
+    <ul>
+      <li><strong>Serviço:</strong> ${serviceName}</li>
+      <li><strong>Data:</strong> ${formattedDate}</li>
+      <li><strong>Horário:</strong> ${time}</li>
+    </ul>
+    <p class="text-danger"><strong>Esta ação não pode ser desfeita.</strong></p>
+  `);
+
+  // Armazena o ID do agendamento no botão
+  $('#confirm-action-btn').data('appointment-id', appointmentId);
+
+  // Mostra o modal
+  const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+  
+  modal.show();
+
 }
