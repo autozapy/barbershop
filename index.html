@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Elite Barber Shop - Agendamento Online</title>
-  <meta name="description" content="Agende seu horário na Elite Barber Shop - A melhor barbearia da cidade" />
-  <meta name="author" content="Elite Barber Shop" />
+  <title>Agendamento - Barbearia Online</title>
+  <meta name="description" content="Agende seu horário - Agendamento Online" />
+  <meta name="author" content="Agendamento 360" />
 
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,6 +17,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+  <!-- Flatpickr CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/loading.css">
@@ -24,200 +28,8 @@
 </head>
 
 <body>
-  <!-- Hero Section -->
-  <div id="hero-section" class="hero-section d-flex align-items-center pb-5 pb-md-0">
-    <div class="container">
-      <div class="row justify-content-center text-center text-white">
-        <div class="col-lg-8">
-          <div class="mb-4">
-            <i class="bi bi-scissors barber-gold mb-3" style="font-size: 4rem;"></i>
-          </div>
-          <h1 class="display-2 fw-bold mb-4">Elite Barber Shop</h1>
-          <p class="lead mb-5 text-light">
-            A melhor experiência em cortes masculinos da cidade.
-            Tradição, estilo e qualidade em cada atendimento.
-          </p>
 
-          <div class="row mb-5 destaques-estabelecimento">
-            <div class="col-md-4 mb-3">
-              <div class="d-flex flex-column align-items-center">
-                <i class="bi bi-star-fill barber-gold mb-2" style="font-size: 2rem;"></i>
-                <h5 class="fw-semibold">Qualidade Premium</h5>
-                <p class="text-light small mb-0">Produtos e técnicas de primeira linha</p>
-              </div>
-            </div>
-            <div class="col-md-4 mb-3">
-              <div class="d-flex flex-column align-items-center">
-                <i class="bi bi-clock barber-gold mb-2" style="font-size: 2rem;"></i>
-                <h5 class="fw-semibold">Pontualidade</h5>
-                <p class="text-light small mb-0">Respeito ao seu tempo</p>
-              </div>
-            </div>
-            <div class="col-md-4 mb-3">
-              <div class="d-flex flex-column align-items-center">
-                <i class="bi bi-people barber-gold mb-2" style="font-size: 2rem;"></i>
-                <h5 class="fw-semibold">Profissionais</h5>
-                <p class="text-light small mb-0">Barbeiros especializados</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="d-flex flex-column flex-md-row gap-3 justify-content-center">
-            <button id="start-booking-btn" class="btn btn-barber-primary btn-lg px-5 py-3 fw-semibold">
-              <i class="bi bi-scissors me-2"></i>
-              Agendar Horário
-            </button>
-
-            <button id="check-appointments-btn" class="btn btn-barber-outline btn-lg px-5 py-3 fw-semibold">
-              <i class="bi bi-calendar-check me-2"></i>
-              Consultar Agendamentos
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Check Appointments Section -->
-  <div id="check-appointments-section" class="min-vh-100 bg-light d-none">
-    <!-- Header -->
-    <div class="barber-bg-gradient text-white py-4">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-auto">
-            <button id="back-from-check-btn" class="btn btn-link text-white p-0 me-3">
-              <i class="bi bi-arrow-left" style="font-size: 1.5rem;"></i>
-            </button>
-          </div>
-          <div class="col">
-            <h2 class="fw-bold mb-0">Meus Agendamentos</h2>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Search Section -->
-    <div class="container py-5">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <div id="phone-search-section">
-            <div class="card shadow-sm">
-              <div class="card-body p-5">
-                <div class="text-center mb-4">
-                  <i class="bi bi-search barber-gold mb-3" style="font-size: 3rem;"></i>
-                  <h3 class="fw-bold">Consultar Agendamentos</h3>
-                  <p class="text-muted">Digite seu número de celular para visualizar seus agendamentos</p>
-                </div>
-
-                <form id="phone-search-form">
-                  <div class="mb-4">
-                    <label for="search-phone" class="form-label fw-semibold">
-                      <i class="bi bi-phone me-2"></i>
-                      Número do Celular *
-                    </label>
-                    <input type="tel" id="search-phone" class="form-control form-control-lg"
-                      placeholder="(11) 99999-9999" maxlength="15" />
-                    <div class="invalid-feedback">
-                      <i class="bi bi-exclamation-circle me-1"></i>
-                      Formato: (11) 99999-9999
-                    </div>
-                  </div>
-
-                  <div class="d-grid">
-                    <button type="submit" class="btn btn-barber-primary btn-lg">
-                      <i class="bi bi-search me-2"></i>
-                      Buscar Agendamentos
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-
-          <!-- Results Section -->
-          <div id="appointments-results-section" class="d-none">
-            <div class="d-flex align-items-center justify-content-between mb-4">
-              <h4 class="fw-bold mb-0">Seus Agendamentos</h4>
-              <button id="new-search-btn" class="btn btn-barber-outline">
-                <i class="bi bi-search me-2"></i>
-                Nova Consulta
-              </button>
-            </div>
-
-            <div id="appointments-list">
-              <!-- Lista de agendamentos será inserida aqui -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Booking Flow Section -->
-  <div id="booking-section" class="min-vh-100 bg-light d-none">
-    <!-- Header -->
-    <div class="barber-bg-gradient text-white py-4">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-auto">
-            <button id="back-to-home-btn" class="btn btn-link text-white p-0 me-3">
-              <i class="bi bi-arrow-left" style="font-size: 1.5rem;"></i>
-            </button>
-          </div>
-          <div class="col">
-            <h2 class="fw-bold mb-0">Agendamento</h2>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Progress Steps -->
-    <div class="bg-white border-bottom">
-      <div class="container py-3">
-        <div class="row">
-          <div class="col">
-            <!-- Desktop version -->
-            <div id="progress-desktop" class="d-none d-md-flex justify-content-between align-items-center">
-              <!-- Steps will be generated by JavaScript -->
-            </div>
-
-            <!-- Mobile version -->
-            <div id="progress-mobile" class="d-md-none">
-              <div class="d-flex align-items-center justify-content-center mb-3">
-                <div id="mobile-step-number"
-                  class="progress-step d-flex align-items-center justify-content-center rounded-circle fw-bold me-3 active"
-                  style="width: 40px; height: 40px;">
-                  1
-                </div>
-                <div>
-                  <h6 id="mobile-step-title" class="mb-0 fw-semibold">Dados Pessoais</h6>
-                  <small id="mobile-step-counter" class="text-muted">Passo 1 de 6</small>
-                </div>
-              </div>
-            </div>
-
-            <!-- Progress Bar -->
-            <div class="mt-3">
-              <div class="progress" style="height: 4px;">
-                <div id="progress-bar" class="progress-bar barber-bg-gold" style="width: 16.67%;"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Step Content -->
-    <div class="container py-5">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <div id="step-content" class="step-fade-in">
-            <!-- Step content will be generated by JavaScript -->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="conteudo"></div>
 
   <!-- Global Loading Overlay -->
   <div id="global-loading-overlay" class="loading-overlay d-none">
@@ -233,33 +45,20 @@
     </div>
   </div>
 
-  <!-- Confirmation Modal -->
-  <div class="modal fade" id="confirmationModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modal-title">Confirmar Ação</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body" id="modal-body">
-          Tem certeza que deseja realizar esta ação?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-barber-primary" id="confirm-action-btn">Confirmar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Bootstrap 5 JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Flatpickr JS -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <!-- Tradução para português -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
+
   <!-- Custom JavaScript -->
-  <script src="js/base.js"></script>
-  <script src="js/script.js"></script>
+  <script type="module" src="/js/main.js"></script>
   <script src="js/loading.js"></script>
 </body>
 

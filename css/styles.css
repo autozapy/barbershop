@@ -227,13 +227,13 @@ input.is-invalid + .invalid-feedback {
   font-size: 0.85rem;
 }
 
-.status-badge.agendado {
-  background-color: #198754 !important;
+.status-badge.confirmado {
+  background-color: #0d6efd !important;
   color: white !important;
 }
 
 .status-badge.realizado {
-  background-color: #6c757d !important;
+  background-color: #198754 !important;
   color: white !important;
 }
 
@@ -285,4 +285,46 @@ input.is-invalid + .invalid-feedback {
   .appointment-card .btn-outline-danger {
     font-size: 0.9rem;
   }
+}
+
+/* Block Styles */
+.block-item {
+  background: linear-gradient(90deg, rgba(220, 53, 69, 0.1) 0%, rgba(248, 249, 250, 0.8) 100%);
+  border-left: 4px solid #dc3545 !important;
+}
+
+.block-item .text-danger {
+  color: #dc3545 !important;
+}
+
+.block-item:hover {
+  background: linear-gradient(90deg, rgba(220, 53, 69, 0.15) 0%, rgba(248, 249, 250, 0.9) 100%);
+}
+
+/* Modal enhancements */
+.modal-header {
+  background: linear-gradient(135deg, var(--barber-dark) 0%, var(--barber-gray) 100%);
+  color: white;
+}
+
+.modal-header .btn-close {
+  filter: invert(1);
+}
+
+/* Form validation styles */
+.form-control.is-invalid {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.form-control.is-valid {
+  border-color: #198754;
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+}
+
+/* Alert customization */
+.alert-info {
+  background-color: rgba(13, 110, 253, 0.1);
+  border-color: rgba(13, 110, 253, 0.2);
+  color: #084298;
 }
